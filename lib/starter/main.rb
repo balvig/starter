@@ -17,15 +17,15 @@ module Starter
         sleep 300
       end
 
-    rescue => e
+    rescue Interrupt, Exception => e
       turn_off_all_lights
-      puts "Ended: #{e.message}"
+      RPi::GPIO.reset
+      puts "Ended. #{e} #{e.message}"
     end
 
     private
 
       def initialize_pins
-        RPi::GPIO.reset
         RPi::GPIO.set_numbering :bcm
         LIGHTS.values.each do |pin|
           RPi::GPIO.setup pin, as: :output
