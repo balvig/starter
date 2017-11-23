@@ -19,7 +19,7 @@ module Starter
 
     rescue Interrupt, Exception => e
       turn_off_all_lights
-      RPi::GPIO.reset
+      reset_pins
       puts "Ended. #{e} #{e.message}"
     end
 
@@ -50,6 +50,10 @@ module Starter
         LIGHTS.values.each do |pin|
           RPi::GPIO.set_low pin
         end
+      end
+
+      def reset_pins
+        RPi::GPIO.reset
       end
   end
 end
