@@ -35,7 +35,7 @@ module Starter
       def fetch_and_update
         result = Service.new.run
         update_status result[:status]
-        logger.info "Value: #{result[:value]}"
+        logger.info "#{result[:value]} / #{result[:status]}"
       end
 
       def update_status(status)
