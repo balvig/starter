@@ -19,7 +19,7 @@ module Starter
       end
 
       def rain_probability
-        result["list"].first["rain"]["3h"] || 0
+        result["list"].first.fetch("rain", {})["3h"] || 0
       rescue => e
         puts "Forecast error: #{e.message}"
         nil

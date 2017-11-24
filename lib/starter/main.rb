@@ -20,7 +20,7 @@ module Starter
     rescue Interrupt, Exception => e
       turn_off_all_lights
       reset_pins
-      puts "Ended. #{e} #{e.message}"
+      raise
     end
 
     private
@@ -35,7 +35,7 @@ module Starter
       def fetch_and_update
         result = Service.new.run
         update_status result[:status]
-        puts "Value: #{result[:value]}"
+        logger.info "Value: #{result[:value]}"
       end
 
       def update_status(status)
@@ -54,6 +54,16 @@ module Starter
 
       def reset_pins
         RPi::GPIO.reset
+      end
+
+      def logger
+        @_logger ||= build_logger
+      end
+
+      def build_logger
+        logger = Logger.new(STDOUT)
+        logger.formatter = ->(_, datetime, _, msg) { "#{datetime} - #{msg}\n" }
+        logger
       end
   end
 end
