@@ -10,9 +10,20 @@ module Starter
     LED_YELLOW = 27
     LED_GREEN = 22
 
-    def run
+    def initialize
       initialize_pins
 
+      @lights = {
+        red: RpiComponents::Led.new(LED_RED),
+        yellow: RpiComponents::Led.new(LED_YELLOW),
+        green: RpiComponents::Led.new(LED_GREEN)
+      }
+      @ticker = Ticker.new
+
+      sleep 2 #Avoid garbled text
+    end
+
+    def run
       while true do
         fetch_and_update
         sleep UPDATE_INTERVAL
@@ -26,24 +37,10 @@ module Starter
 
     private
 
+      attr_reader :lights, :ticker
+
       def initialize_pins
         RpiComponents::setup(numbering: :bcm)
-      end
-
-      def lights
-        @_lights ||= build_lights
-      end
-
-      def build_lights
-        {
-          red: RpiComponents::Led.new(LED_RED),
-          yellow: RpiComponents::Led.new(LED_YELLOW),
-          green: RpiComponents::Led.new(LED_GREEN)
-        }
-      end
-
-      def ticker
-        @_ticker ||= Ticker.new
       end
 
       def fetch_and_update

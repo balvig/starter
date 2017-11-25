@@ -10,6 +10,10 @@ module Starter
     LCD_D6 = 5
     LCD_D7 = 11
 
+    def initialize
+      @lcd = build_lcd
+    end
+
     def cycle(messages = [])
       @thread.exit if @thread
       @thread = Thread.new do
@@ -28,13 +32,11 @@ module Starter
 
     private
 
+      attr_reader :lcd
+
       def show(message)
         lcd.message message[:title]
         lcd.message message[:body], 2
-      end
-
-      def lcd
-        @_lcd ||= build_lcd
       end
 
       def build_lcd
@@ -47,6 +49,5 @@ module Starter
           LCD_D7
         )
       end
-
   end
 end
