@@ -1,10 +1,11 @@
+require "logger"
 require "rpi_components"
-require "starter/service"
+require "starter/api"
 require "starter/ticker"
 
 module Starter
   class Main
-    UPDATE_INTERVAL = 300
+    UPDATE_INTERVAL = 600
     LED_RED = 17
     LED_YELLOW = 27
     LED_GREEN = 22
@@ -46,7 +47,7 @@ module Starter
       end
 
       def fetch_and_update
-        result = Service.new.run
+        result = Api.new.run
         update_status result[:status]
         ticker.cycle result[:messages]
         logger.info result
@@ -54,7 +55,7 @@ module Starter
 
       def update_status(status)
         turn_off_all_lights
-        light = lights[status]
+        light = lights[status.to_sym]
         light.on if light
       end
 
