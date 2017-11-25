@@ -1,29 +1,25 @@
 require "rpi_components"
 require "starter/service"
+require "starter/ticker"
 
 module Starter
   class Main
+    UPDATE_INTERVAL = 300
     LED_RED = 17
     LED_YELLOW = 27
     LED_GREEN = 22
-    LCD_RS  = 26
-    LCD_E   = 19
-    LCD_D4  = 13
-    LCD_D5  = 6
-    LCD_D6  = 5
-    LCD_D7  = 11
 
     def run
       initialize_pins
 
       while true do
         fetch_and_update
-        sleep 300
+        sleep UPDATE_INTERVAL
       end
 
-    rescue Interrupt, Exception => e
+    rescue Interrupt, Exception
       turn_off_all_lights
-      lcd.off
+      ticker.off
       raise
     end
 
@@ -34,10 +30,10 @@ module Starter
       end
 
       def lights
-        @_lights ||= initialize_lights
+        @_lights ||= build_lights
       end
 
-      def initialize_lights
+      def build_lights
         {
           red: RpiComponents::Led.new(LED_RED),
           yellow: RpiComponents::Led.new(LED_YELLOW),
@@ -45,15 +41,14 @@ module Starter
         }
       end
 
-      def lcd
-        @_lcd ||= RpiComponents::Lcd.new(LCD_RS, LCD_E, LCD_D4, LCD_D5, LCD_D6, LCD_D7)
+      def ticker
+        @_ticker ||= Ticker.new
       end
 
       def fetch_and_update
         result = Service.new.run
         update_status result[:status]
-        lcd.message result[:title]
-        lcd.message result[:body], 2
+        ticker.cycle result[:messages]
         logger.info result
       end
 

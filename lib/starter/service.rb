@@ -6,8 +6,16 @@ module Starter
       forecast = Forecast.new
       {
         status: status_for(forecast.rain_probability),
-        title: forecast.description,
-        body: "Rain: #{forecast.rain_probability * 100}%"
+        messages: [
+          {
+            title: forecast.description,
+            body: "Rain: #{forecast.rain_probability * 100}%"
+          },
+          {
+            title: Date.today.to_s,
+            body: "Burnable"
+          }
+        ]
       }
     end
 

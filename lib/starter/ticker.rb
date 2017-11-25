@@ -1,0 +1,52 @@
+require "rpi_components"
+
+module Starter
+  class Ticker
+    LCD_RS = 26
+    LCD_E = 19
+    LCD_D4 = 13
+    LCD_D5 = 6
+    LCD_D6 = 5
+    LCD_D7 = 11
+
+    def cycle(messages = [])
+      @thread.exit if @thread
+      @thread = Thread.new do
+        loop do
+          messages.each do |message|
+            show message
+            sleep 5
+          end
+        end
+      end
+    end
+
+    def off
+      lcd.off
+    end
+
+    private
+
+      def show(message)
+        puts message
+        lcd.message message[:title]
+        lcd.message message[:body], 2
+      end
+
+      def lcd
+        @_lcd ||= build_lcd
+      end
+
+      def build_lcd
+        RpiComponents::Lcd.new(
+          LCD_RS,
+          LCD_E,
+          LCD_D4,
+          LCD_D5,
+          LCD_D6,
+          LCD_D7
+        )
+      end
+
+  end
+end
