@@ -1,8 +1,17 @@
+GIT
+  remote: https://github.com/kochka/ruby_rpi_components
+  revision: 9f24df6fe7f0c7b924ca401f7809e674bfd7add0
+  specs:
+    rpi_components (0.2.0)
+      i2c-devices (~> 0.0.6)
+      rpi_gpio (~> 0.3.2)
+
 PATH
   remote: .
   specs:
     starter (0.1.0)
       open-weather-api
+      rpi_components
       rpi_gpio
 
 GEM
@@ -13,6 +22,7 @@ GEM
       unf (>= 0.0.5, < 1.0.0)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
+    i2c-devices (0.0.6)
     method_source (0.9.0)
     mime-types (3.1)
       mime-types-data (~> 3.2015)
@@ -42,6 +52,7 @@ DEPENDENCIES
   minitest (~> 5.0)
   pry
   rake (~> 10.0)
+  rpi_components!
   starter!
 
 BUNDLED WITH

@@ -32,6 +32,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "rpi_gpio"
   spec.add_dependency "open-weather-api"
+  spec.add_dependency "rpi_components"
 
   spec.add_development_dependency "bundler", "~> 1.16"
   spec.add_development_dependency "rake", "~> 10.0"

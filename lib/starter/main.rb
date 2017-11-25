@@ -1,14 +1,9 @@
 require "rpi_gpio"
+require "rpi_components"
 require "starter/service"
 
 module Starter
   class Main
-    LIGHTS = {
-      red: 17,
-      yellow: 27,
-      green: 22
-    }
-
     def run
       initialize_pins
 
@@ -26,10 +21,19 @@ module Starter
     private
 
       def initialize_pins
-        RPi::GPIO.set_numbering :bcm
-        LIGHTS.values.each do |pin|
-          RPi::GPIO.setup pin, as: :output
-        end
+        RpiComponents::setup(numbering: :bcm)
+      end
+
+      def lights
+        @_lights ||= initialize_lights
+      end
+
+      def initialize_lights
+        {
+          red: RpiComponents::Led.new(17),
+          yellow: RpiComponents::Led.new(27),
+          green: RpiComponents::Led.new(22)
+        }
       end
 
       def fetch_and_update
@@ -40,16 +44,12 @@ module Starter
 
       def update_status(status)
         turn_off_all_lights
-        pin = LIGHTS[status]
-        if pin
-          RPi::GPIO.set_high pin
-        end
+        light = lights[status]
+        light.on if light
       end
 
       def turn_off_all_lights
-        LIGHTS.values.each do |pin|
-          RPi::GPIO.set_low pin
-        end
+        lights.values.map(&:off)
       end
 
       def reset_pins
