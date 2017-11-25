@@ -5,7 +5,8 @@ module Starter
     def run
       {
         status: status,
-        value: value
+        value: value,
+        title: "Rain: #{value}"
       }
     end
 

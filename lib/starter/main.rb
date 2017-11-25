@@ -4,6 +4,16 @@ require "starter/service"
 
 module Starter
   class Main
+    LED_RED = 17
+    LED_YELLOW = 27
+    LED_GREEN = 22
+    LCD_RS  = 26
+    LCD_E   = 19
+    LCD_D4  = 13
+    LCD_D5  = 6
+    LCD_D6  = 5
+    LCD_D7  = 11
+
     def run
       initialize_pins
 
@@ -14,6 +24,7 @@ module Starter
 
     rescue Interrupt, Exception => e
       turn_off_all_lights
+      lcd.off
       reset_pins
       raise
     end
@@ -30,15 +41,20 @@ module Starter
 
       def initialize_lights
         {
-          red: RpiComponents::Led.new(17),
-          yellow: RpiComponents::Led.new(27),
-          green: RpiComponents::Led.new(22)
+          red: RpiComponents::Led.new(LED_RED),
+          yellow: RpiComponents::Led.new(LED_YELLOW),
+          green: RpiComponents::Led.new(LED_GREEN)
         }
+      end
+
+      def lcd
+        @_lcd ||= RpiComponents::Lcd.new(LCD_RS, LCD_E, LCD_D4, LCD_D5, LCD_D6, LCD_D7)
       end
 
       def fetch_and_update
         result = Service.new.run
         update_status result[:status]
+        lcd.message result[:title]
         logger.info "#{result[:value]} / #{result[:status]}"
       end
 
