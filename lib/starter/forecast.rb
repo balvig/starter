@@ -4,25 +4,26 @@ module Starter
   class Forecast
     API_KEY = "c205f9ab7b647c699da6c29010cf8829"
 
-    def run
-      rain_probability
+    def rain_probability
+      data.fetch("rain", {})["3h"] || 0
+    end
+
+    def description
+      data["weather"].first["description"]
     end
 
     private
 
-      def api
-        @_api ||= OpenWeatherAPI::API.new api_key: API_KEY
+      def data
+        @_data ||= fetch["list"].first
       end
 
-      def result
+      def fetch
         api.forecast :hourly, city: "Tokyo", country_code: "jp"
       end
 
-      def rain_probability
-        result["list"].first.fetch("rain", {})["3h"] || 0
-      rescue => e
-        puts "Forecast error: #{e.message}"
-        nil
+      def api
+        @_api ||= OpenWeatherAPI::API.new api_key: API_KEY
       end
   end
 end

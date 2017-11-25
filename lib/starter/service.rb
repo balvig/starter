@@ -3,24 +3,17 @@ require "starter/forecast"
 module Starter
   class Service
     def run
+      forecast = Forecast.new
       {
-        status: status,
-        value: value,
-        title: "Rain: #{value}"
+        status: status_for(forecast.rain_probability),
+        title: forecast.description,
+        body: "Rain: #{forecast.rain_probability * 100}%"
       }
     end
 
     private
 
-      def value
-        rain_probability
-      end
-
-      def rain_probability
-        @_rain_probability ||= Forecast.new.run
-      end
-
-      def status
+      def status_for(value)
         if value.nil?
           nil
         elsif value >= 0.7

@@ -55,7 +55,8 @@ module Starter
         result = Service.new.run
         update_status result[:status]
         lcd.message result[:title]
-        logger.info "#{result[:value]} / #{result[:status]}"
+        lcd.message result[:body], 2
+        logger.info result
       end
 
       def update_status(status)
