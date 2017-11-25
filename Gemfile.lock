@@ -12,7 +12,6 @@ PATH
     starter (0.1.0)
       open-weather-api
       rpi_components
-      rpi_gpio
 
 GEM
   remote: https://rubygems.org/

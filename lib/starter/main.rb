@@ -1,4 +1,3 @@
-require "rpi_gpio"
 require "rpi_components"
 require "starter/service"
 
@@ -25,7 +24,6 @@ module Starter
     rescue Interrupt, Exception => e
       turn_off_all_lights
       lcd.off
-      reset_pins
       raise
     end
 
@@ -67,10 +65,6 @@ module Starter
 
       def turn_off_all_lights
         lights.values.map(&:off)
-      end
-
-      def reset_pins
-        RPi::GPIO.reset
       end
 
       def logger
