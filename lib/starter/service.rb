@@ -8,12 +8,8 @@ module Starter
         status: status_for(forecast.rain_probability),
         messages: [
           {
-            title: forecast.description,
+            title: forecast.description.capitalize,
             body: "Rain: #{forecast.rain_probability * 100}%"
-          },
-          {
-            title: Date.today.to_s,
-            body: "Burnable"
           }
         ]
       }
