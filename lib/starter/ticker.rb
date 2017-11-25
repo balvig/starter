@@ -10,10 +10,6 @@ module Starter
     LCD_D6 = 5
     LCD_D7 = 11
 
-    def initialize
-      lcd.off
-    end
-
     def cycle(messages = [])
       @thread.exit if @thread
       @thread = Thread.new do
@@ -26,8 +22,8 @@ module Starter
       end
     end
 
-    def off
-      lcd.off
+    def clear
+      lcd.clear
     end
 
     private

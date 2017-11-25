@@ -9,6 +9,8 @@ module Starter
       uri = URI(URL)
       response = Net::HTTP.get(uri)
       JSON.parse(response, symbolize_names: true)
+      rescue JSON::ParserError
+        nil
     end
   end
 end

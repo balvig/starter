@@ -20,7 +20,7 @@ module Starter
 
     rescue Interrupt, Exception
       turn_off_all_lights
-      ticker.off
+      ticker.clear
       raise
     end
 
@@ -48,9 +48,13 @@ module Starter
 
       def fetch_and_update
         result = Api.new.run
-        update_status result[:status]
-        ticker.cycle result[:messages]
-        logger.info result
+        if result
+          update_status result[:status]
+          ticker.cycle result[:messages]
+          logger.info result
+        else
+          logger.error "Error fetching from API"
+        end
       end
 
       def update_status(status)
