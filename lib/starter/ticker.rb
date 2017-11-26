@@ -9,15 +9,13 @@ module Starter
     end
 
     def cycle(messages = [])
-      thread.exit if thread
-      self.thread = Thread.new do
-        loop do
-          messages.each do |message|
-            show message
-            sleep CYCLE_INTERVAL
-          end
+      in_thread do
+        messages.each do |message|
+          show message
+          sleep CYCLE_INTERVAL
         end
       end
+
     end
 
     def clear
@@ -28,6 +26,15 @@ module Starter
 
       attr_accessor :thread
       attr_reader :lcd
+
+      def in_thread
+        thread.exit if thread
+        self.thread = Thread.new do
+          loop do
+            yield
+          end
+        end
+      end
 
       def show(message)
         lcd.message message[:title]

@@ -2,22 +2,16 @@ require "logger"
 require "rpi_components"
 require "starter/api"
 require "starter/ticker"
+require "starter/rgb"
 
 module Starter
   class Main
     UPDATE_INTERVAL = 300
-    LED_RED = 17
-    LED_YELLOW = 27
-    LED_GREEN = 22
 
     def initialize
       initialize_pins
 
-      @lights = {
-        red: RpiComponents::Led.new(LED_RED),
-        yellow: RpiComponents::Led.new(LED_YELLOW),
-        green: RpiComponents::Led.new(LED_GREEN)
-      }
+      @rgb = Rgb.new
       @ticker = Ticker.new
 
       sleep 2 # Avoid garbled text
@@ -30,14 +24,14 @@ module Starter
       end
 
     rescue Interrupt, Exception
-      turn_off_all_lights
+      rgb.off
       ticker.clear
       raise
     end
 
     private
 
-      attr_reader :lights, :ticker
+      attr_reader :rgb, :ticker
 
       def initialize_pins
         RpiComponents::setup(numbering: :bcm)
@@ -46,22 +40,12 @@ module Starter
       def fetch_and_update
         result = Api.new.run
         if result
-          update_status result[:status]
+          rgb.set_color result[:status]
           ticker.cycle result[:messages]
           logger.info result
         else
           logger.error "Error fetching from API"
         end
-      end
-
-      def update_status(status)
-        turn_off_all_lights
-        light = lights[status.to_sym]
-        light.on if light
-      end
-
-      def turn_off_all_lights
-        lights.values.map(&:off)
       end
 
       def logger
