@@ -5,7 +5,7 @@ require "starter/ticker"
 
 module Starter
   class Main
-    UPDATE_INTERVAL = 600
+    UPDATE_INTERVAL = 300
     LED_RED = 17
     LED_YELLOW = 27
     LED_GREEN = 22
@@ -20,7 +20,7 @@ module Starter
       }
       @ticker = Ticker.new
 
-      sleep 2 #Avoid garbled text
+      sleep 2 # Avoid garbled text
     end
 
     def run
