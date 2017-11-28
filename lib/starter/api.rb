@@ -3,7 +3,7 @@ require "json"
 
 module Starter
   class Api
-    URL = "https://damp-peak-95509.herokuapp.com/"
+    URL = "https://starter-api-production.herokuapp.com/"
 
     def run
       uri = URI(URL)
