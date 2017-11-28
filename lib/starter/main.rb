@@ -11,7 +11,7 @@ module Starter
     def initialize
       initialize_pins
 
-      @rgb = Rgb.new
+      #@rgb = Rgb.new
       @ticker = Ticker.new
 
       sleep 2 # Avoid garbled text
@@ -24,7 +24,7 @@ module Starter
       end
 
     rescue Interrupt, Exception
-      rgb.off
+      #rgb.off
       ticker.clear
       raise
     end
@@ -40,7 +40,7 @@ module Starter
       def fetch_and_update
         result = Api.new.run
         if result
-          rgb.set_color result[:status]
+          #rgb.set_color result[:status]
           ticker.cycle result[:messages]
           logger.info result
         else
